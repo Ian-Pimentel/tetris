@@ -31,7 +31,16 @@ get_action :: proc() -> game.ActionSet {
 
 main :: proc() {
 	rl.SetConfigFlags({.VSYNC_HINT})
+
 	rl.InitWindow(game.GAME_SIZE, game.GAME_SIZE, "Tetris")
+	defer rl.CloseWindow() 
+
+	icon_image := rl.LoadImage("icon.png")
+	defer rl.UnloadImage(icon_image)
+	rl.SetWindowIcon(icon_image)
+
+	icon_texture := rl.LoadTextureFromImage(icon_image)
+	defer rl.UnloadTexture(icon_texture)
 
     rl.SetTargetFPS(60)
     

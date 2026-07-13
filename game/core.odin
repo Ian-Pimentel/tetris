@@ -12,6 +12,8 @@ init_game :: proc(game: ^GameState) {
 }
 
 input :: proc(actions: ActionSet, game_state: ^GameState, delta: f32) {
+	if .PAUSE in actions do toggle_pause(game_state)
+	
 	prev_active_piece_state := game_state.active_piece
 	if .MOVE_LEFT in actions {
 		move_piece_left(&game_state.active_piece)
@@ -37,6 +39,9 @@ input :: proc(actions: ActionSet, game_state: ^GameState, delta: f32) {
 	}
 	if .ROTATE_LEFT in actions do rotate_piece_left(&game_state.active_piece)
 	if .ROTATE_RIGHT in actions do rotate_piece_right(&game_state.active_piece)
+	
+	if is_piece_colliding(game_state.active_piece, game_state.playfield) do game_state.active_piece = prev_active_piece_state
+
 	if .HOLD_PIECE in actions do toggle_hold_piece(game_state) 
 	if .HARD_DROP in actions {
 		preview_state := get_preview_piece(game_state.active_piece, game_state.playfield)
@@ -47,9 +52,6 @@ input :: proc(actions: ActionSet, game_state: ^GameState, delta: f32) {
 
 		game_state.can_retrieve_piece = true
 	}
-	if .PAUSE in actions do toggle_pause(game_state)
-	
-	if is_piece_colliding(game_state.active_piece, game_state.playfield) do game_state.active_piece = prev_active_piece_state
 }
 
 update :: proc(action: ActionSet, game_state: ^GameState, tick_timer: ^f32, delta: f32) {	

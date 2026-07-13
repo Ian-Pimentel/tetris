@@ -2,7 +2,7 @@ package renderer
 PREVIEW_COLOR :: rl.Color{rl.PINK.r, rl.PINK.g, rl.PINK.b, rl.PINK.a / 2}
 
 draw :: proc(game_state: game.GameState) {
-	rl.DrawText(fmt.ctprint("lock timer", game_state.lock_timer), game.CELL_SIZE * 3, game.CELL_SIZE * 15, 15, rl.PINK)
+	rl.DrawText(fmt.ctprintf("lock timer %.1f", game_state.lock_timer), game.CELL_SIZE * 3, game.CELL_SIZE * 15, 15, rl.PINK)
 	
 	draw_piece(game_state.active_piece)
 
