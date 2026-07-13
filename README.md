@@ -22,6 +22,11 @@
   odin run .
   ```
 
+## How to build an executable
+  ```sh
+  odin build . -resource:res/resource.rc -out:Tetris.exe -subsystem:windows
+  ```
+
 ## Notes
 - All of the code was written by me. It is ugly, but it's human
 - Got stuck when programming the pieces rotation, this video saved me: https://www.youtube.com/watch?v=jcUctrLC-7M
