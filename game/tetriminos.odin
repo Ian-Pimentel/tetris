@@ -1,43 +1,8 @@
-package tetris
+package game
 
-import rl "vendor:raylib"
-
-GAME_SIZE :: 600
-
-CELL_SIZE :: 20
-CELL_WINDOW_RATIO :: GAME_SIZE / CELL_SIZE
-
-PLAYFIELD_WIDTH :: 10
-PLAYFIELD_HEIGHT :: 22
-
-TICK_RATE :: 0.3
-HELD_TICK_RATE :: 0.1
-AUTO_MOVEMENT_DELAY :: 0.15
-LOCK_DELAY :: 0.5
-
-NUM_PIECES :: 7
-NUM_ROTATIONS :: 4
-
-PIECES_INITIAL_POSITION :: Vec2i{0, 0}
-
-PREVIEW_COLOR :: rl.Color{rl.PINK.r, rl.PINK.g, rl.PINK.b, rl.PINK.a / 2}
-
-@(rodata)
-LINES_TO_POINTS := [4]int{100, 300, 500, 800}
-B2B_MULTIPLIER :: 1.5
-
-// não se escore na abstração alheia, modularize! o core da aplicação não deve depender da impls 
-// import rl "vendor:raylib"
-// @(rodata)
-// COLORS := [NUM_PIECES]rl.Color{
-// 	rl.BLUE,
-// 	rl.DARKBLUE,
-// 	rl.ORANGE,
-// 	rl.YELLOW,
-// 	rl.PURPLE,
-// 	rl.GREEN,
-// 	rl.RED,
-// }
+get_tetrimino :: proc(idx, rotation: int) -> Tetrimino {
+	return TETRIMINOS[idx][rotation]
+}
 
 @(rodata)
 TETRIMINOS := [NUM_PIECES][NUM_ROTATIONS]Tetrimino{
