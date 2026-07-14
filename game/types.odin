@@ -37,21 +37,3 @@ GameState :: struct {
 	auto_movement_timer: f32,
 	lock_timer: f32
 }
-
-Action :: enum {
-	MOVE_LEFT,
-	MOVE_RIGHT,
-	HOLD_LEFT,
-	HOLD_RIGHT,
-
-	ROTATE_LEFT,
-	ROTATE_RIGHT,
-
-	SOFT_DROP,
-	HARD_DROP,
-
-	HOLD_PIECE,
-
-	PAUSE
-}
-ActionSet :: bit_set[Action]
