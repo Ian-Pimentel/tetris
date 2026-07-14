@@ -42,7 +42,11 @@ main :: proc() {
 	for !rl.WindowShouldClose() {
 		switch game_state.status {
 		case .PLAYING:	
-			game.update(game.get_action(), &game_state, &tick_timer, rl.GetFrameTime())
+			action := controls.poll_input()
+			delta := rl.GetFrameTime()
+			controls.handle_actions(action, &game_state, delta)
+			tick_rate: f32 = game.TICK_RATE if .SOFT_DROP not_in action else game.HELD_TICK_RATE
+			game.update(tick_rate, &game_state, &tick_timer, delta)
 		case .PAUSED:
 			if rl.IsKeyPressed(.P) do game_state.status = .PLAYING
 		case .GAME_OVER:
@@ -69,6 +73,7 @@ main :: proc() {
 }
 
 import "core:fmt"
+import "controls"
 import "game"
 import "renderer"
 import rl "vendor:raylib"

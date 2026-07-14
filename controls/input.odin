@@ -1,7 +1,7 @@
-package game
+package controls
 
-get_action :: proc() -> game.ActionSet {
-	actions: game.ActionSet
+poll_input :: proc() -> ActionSet {
+	actions: ActionSet
 	
 	if rl.IsKeyPressed(.P) 			do actions += {.PAUSE}
 	
@@ -22,5 +22,4 @@ get_action :: proc() -> game.ActionSet {
 	return actions
 }
 
-import "../game"
 import rl "vendor:raylib"
