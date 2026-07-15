@@ -1,4 +1,4 @@
-package core
+package game
 
 get_tetrimino :: proc(idx, rotation: int) -> Tetrimino {
 	return TETRIMINOS[idx][rotation]

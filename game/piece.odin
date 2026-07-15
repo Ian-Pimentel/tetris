@@ -1,4 +1,4 @@
-package core
+package game
 
 is_piece_suspended :: proc(state: PieceState, playfield: Playfield) -> bool {
 	for block_position in get_tetrimino(state.idx, state.rotation) {

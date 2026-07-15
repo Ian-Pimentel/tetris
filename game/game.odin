@@ -1,4 +1,4 @@
-package core
+package game
 
 init_game :: proc(game: ^GameState) {
 	game^ = GameState{level = 1, can_retrieve_piece = true, idx_piece_on_hold = -1}

@@ -1,4 +1,4 @@
-package core
+package game
 
 calculate_points :: proc(game: ^GameState, lines_cleared: int) {
 	if lines_cleared > 0 {

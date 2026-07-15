@@ -1,4 +1,4 @@
-package core
+package game
 
 get_cell_value :: proc(position: Vec2i, playfield: Playfield) -> int {
 	assert(!is_position_outta_bounds(position))

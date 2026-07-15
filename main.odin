@@ -1,7 +1,7 @@
 package tetris
 
-get_action :: proc() -> core.ActionSet {
-	actions: core.ActionSet
+get_action :: proc() -> game.ActionSet {
+	actions: game.ActionSet
 	
 	if rl.IsKeyPressed(.P) 			do actions += {.PAUSE}
 	
@@ -32,7 +32,7 @@ get_action :: proc() -> core.ActionSet {
 main :: proc() {
 	rl.SetConfigFlags({.VSYNC_HINT})
 
-	rl.InitWindow(core.GAME_SIZE, core.GAME_SIZE, "Tetris")
+	rl.InitWindow(game.GAME_SIZE, game.GAME_SIZE, "Tetris")
 	defer rl.CloseWindow() 
 
 	icon_image := rl.LoadImage("icon.png")
@@ -46,30 +46,30 @@ main :: proc() {
     
     camera := rl.Camera2D{
     	target = {
-     		core.GAME_SIZE/2,
+     		game.GAME_SIZE/2,
        		0
      	},
       	offset = {
-       		core.GAME_SIZE - core.GAME_SIZE/2,
-         	-core.CELL_WINDOW_RATIO * 1.2
+       		game.GAME_SIZE - game.GAME_SIZE/2,
+         	-game.CELL_WINDOW_RATIO * 1.2
        	},
         zoom = 1.2
     }
 	
-	game_state := core.GameState{}
-	core.init_game(&game_state)
+	game_state := game.GameState{}
+	game.init_game(&game_state)
 
-	tick_timer: f32 = core.TICK_RATE
+	tick_timer: f32 = game.TICK_RATE
 	
 	for !rl.WindowShouldClose() {
 		switch game_state.status {
 		case .PLAYING:	
-				core.update(get_action(), &game_state, &tick_timer, rl.GetFrameTime())
+				game.update(get_action(), &game_state, &tick_timer, rl.GetFrameTime())
 		case .PAUSED:
 			if rl.IsKeyPressed(.P) do game_state.status = .PLAYING
 		case .GAME_OVER:
 			if rl.IsKeyPressed(.R) {
-				core.init_game(&game_state)
+				game.init_game(&game_state)
 				game_state.status = .PLAYING
 			}
 		}
@@ -91,6 +91,6 @@ main :: proc() {
 }
 
 import "core:fmt"
-import "core"
+import "game"
 import "renderer"
 import rl "vendor:raylib"

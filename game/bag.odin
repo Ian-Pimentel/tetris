@@ -1,4 +1,4 @@
-package core
+package game
 
 reset_bag :: proc(bag: ^Bag) {
 	bag^ = Bag{0,1,2,3,4,5,6}
