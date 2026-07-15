@@ -1,14 +1,13 @@
 package renderer
-PREVIEW_COLOR :: rl.Color{rl.PINK.r, rl.PINK.g, rl.PINK.b, rl.PINK.a / 2}
 
-draw :: proc(game_state: game.GameState) {
-	rl.DrawText(fmt.ctprintf("lock timer %.1f", game_state.lock_timer), game.CELL_SIZE * 3, game.CELL_SIZE * 15, 15, rl.PINK)
+draw :: proc(game_state: core.GameState) {
+	rl.DrawText(fmt.ctprintf("lock timer %.1f", game_state.lock_timer), core.CELL_SIZE * 3, core.CELL_SIZE * 15, 15, rl.PINK)
 	
 	draw_piece(game_state.active_piece)
 
 	draw_playfield(game_state.playfield)
 
-	preview_state := game.get_preview_piece(game_state.active_piece, game_state.playfield) 
+	preview_state := core.get_preview_piece(game_state.active_piece, game_state.playfield) 
 	draw_piece(preview_state, PREVIEW_COLOR)
 
 	draw_stats(game_state)
@@ -28,28 +27,28 @@ draw :: proc(game_state: game.GameState) {
 	}
 }
 
-draw_piece :: proc(state: game.PieceState, color := rl.PINK) {
-	for cell in game.get_tetrimino(state.idx, state.rotation) {
+draw_piece :: proc(state: core.PieceState, color := rl.PINK) {
+	for cell in core.get_tetrimino(state.idx, state.rotation) {
 		piece_pos := state.position + cell
 
 		rl.DrawRectangle(
-			i32(piece_pos.x) * game.CELL_SIZE + (game.GAME_SIZE / 2) - (game.PLAYFIELD_WIDTH * game.CELL_SIZE / 2), 
-			i32(piece_pos.y) * game.CELL_SIZE,
-		 	game.CELL_SIZE,
-				game.CELL_SIZE,
+			i32(piece_pos.x) * core.CELL_SIZE + (core.GAME_SIZE / 2) - (core.PLAYFIELD_WIDTH * core.CELL_SIZE / 2), 
+			i32(piece_pos.y) * core.CELL_SIZE,
+		 	core.CELL_SIZE,
+				core.CELL_SIZE,
 			color
 		)
 	}
 }
 
-draw_playfield :: proc(playfield: game.Playfield) {
+draw_playfield :: proc(playfield: core.Playfield) {
 	for row, y in playfield {
 		for cell, x in row {
 			cell_rect := rl.Rectangle{
-				f32(x) * game.CELL_SIZE + (game.GAME_SIZE / 2) - (game.PLAYFIELD_WIDTH * game.CELL_SIZE / 2), 
-				f32(y) * game.CELL_SIZE,
-			 	game.CELL_SIZE,
-					game.CELL_SIZE,
+				f32(x) * core.CELL_SIZE + (core.GAME_SIZE / 2) - (core.PLAYFIELD_WIDTH * core.CELL_SIZE / 2), 
+				f32(y) * core.CELL_SIZE,
+			 	core.CELL_SIZE,
+					core.CELL_SIZE,
 			}
 			if cell >= 1 do rl.DrawRectangleRec(
 				cell_rect,
@@ -64,35 +63,35 @@ draw_playfield :: proc(playfield: game.Playfield) {
 	}
 }
 
-draw_stats :: proc(game_state: game.GameState) {
+draw_stats :: proc(game_state: core.GameState) {
 	stats_fontsize: i32 = 13
 	// SCORE
 	rl.DrawText(
 		cstring("POINTS:"),
-	 	game.GAME_SIZE * 0.1 + game.CELL_SIZE / 2,
-	 	8 * game.CELL_SIZE,
+	 	core.GAME_SIZE * 0.1 + core.CELL_SIZE / 2,
+	 	8 * core.CELL_SIZE,
 	 	stats_fontsize,
 	 	rl.PINK
 	)
 	rl.DrawText(
 		fmt.ctprint(game_state.score),
-	 	game.GAME_SIZE * 0.1 + game.CELL_SIZE / 2,
-	 	9 * game.CELL_SIZE,
+	 	core.GAME_SIZE * 0.1 + core.CELL_SIZE / 2,
+	 	9 * core.CELL_SIZE,
 	 	stats_fontsize + 5,
 	 	rl.PINK
 	)
 	// TIME
 	rl.DrawText(
 		cstring("TIME:"),
-	 	game.GAME_SIZE * 0.1 + game.CELL_SIZE / 2,
-	 	10 * game.CELL_SIZE,
+	 	core.GAME_SIZE * 0.1 + core.CELL_SIZE / 2,
+	 	10 * core.CELL_SIZE,
 	 	stats_fontsize,
 	 	rl.PINK
 	)
 	rl.DrawText(
-		fmt.ctprintf("%02d:%02d:%02d", game.split_time(game_state.total_time)),
-	 	game.GAME_SIZE * 0.1 + game.CELL_SIZE / 2,
-	 	11 * game.CELL_SIZE,
+		fmt.ctprintf("%02d:%02d:%02d", core.split_time(game_state.total_time)),
+	 	core.GAME_SIZE * 0.1 + core.CELL_SIZE / 2,
+	 	11 * core.CELL_SIZE,
 	 	stats_fontsize + 5,
 	 	rl.PINK
 	)
@@ -100,65 +99,65 @@ draw_stats :: proc(game_state: game.GameState) {
 	// LINES
 	rl.DrawText(
 		cstring("LINES:"),
-	 	game.GAME_SIZE * 0.1 + game.CELL_SIZE / 2,
-	 	13 * game.CELL_SIZE,
+	 	core.GAME_SIZE * 0.1 + core.CELL_SIZE / 2,
+	 	13 * core.CELL_SIZE,
 	 	stats_fontsize,
 	 	rl.PINK
 	)
 	rl.DrawText(
 		fmt.ctprint(game_state.total_lines),
-	 	game.GAME_SIZE * 0.2 + game.CELL_SIZE / 2,
-	 	13 * game.CELL_SIZE,
+	 	core.GAME_SIZE * 0.2 + core.CELL_SIZE / 2,
+	 	13 * core.CELL_SIZE,
 	 	stats_fontsize + 2,
 	 	rl.PINK
 	)
 }
 
-draw_hold_piece :: proc(game_state: game.GameState) {
+draw_hold_piece :: proc(game_state: core.GameState) {
 	rl.DrawText(
 		cstring("HOLD"),
-	 	game.CELL_WINDOW_RATIO * 3,
-	 	3 * game.CELL_SIZE,
-	 	game.CELL_SIZE,
+	 	core.CELL_WINDOW_RATIO * 3,
+	 	3 * core.CELL_SIZE,
+	 	core.CELL_SIZE,
 	 	rl.PINK
 	)
 
-	if !game.is_hold_free(game_state) {
-		for block_position, i in game.get_tetrimino(game_state.idx_piece_on_hold, 0) {
+	if !core.is_hold_free(game_state) {
+		for block_position, i in core.get_tetrimino(game_state.idx_piece_on_hold, 0) {
 			rl.DrawRectangle(
-				(i32(block_position.x) * game.CELL_SIZE) + game.GAME_SIZE * 0.15, 
-				(i32(block_position.y) + 5) * game.CELL_SIZE,
-			 	game.CELL_SIZE,
-					game.CELL_SIZE,
+				(i32(block_position.x) * core.CELL_SIZE) + core.GAME_SIZE * 0.15, 
+				(i32(block_position.y) + 5) * core.CELL_SIZE,
+			 	core.CELL_SIZE,
+					core.CELL_SIZE,
 				PREVIEW_COLOR
 			)
 		}
 	}
 }
 
-draw_next_piece :: proc(game_state: game.GameState) {
+draw_next_piece :: proc(game_state: core.GameState) {
 	rl.DrawText(
 		cstring("NEXT"),
-	 	game.GAME_SIZE - game.CELL_WINDOW_RATIO * 5,
-	 	3 * game.CELL_SIZE,
-	 	game.CELL_SIZE,
+	 	core.GAME_SIZE - core.CELL_WINDOW_RATIO * 5,
+	 	3 * core.CELL_SIZE,
+	 	core.CELL_SIZE,
 	 	rl.PINK
 	)
 	
 	next_tetrimino_idx := game_state.bag[len(game_state.bag) - 1]
 
-	for block_position, i in game.get_tetrimino(next_tetrimino_idx, 0) {
+	for block_position, i in core.get_tetrimino(next_tetrimino_idx, 0) {
 		rl.DrawRectangle(
-			(i32(block_position.x) * game.CELL_SIZE) + game.GAME_SIZE - game.CELL_WINDOW_RATIO * 5, 
-			(i32(block_position.y) + 5) * game.CELL_SIZE,
-		 	game.CELL_SIZE,
-				game.CELL_SIZE,
+			(i32(block_position.x) * core.CELL_SIZE) + core.GAME_SIZE - core.CELL_WINDOW_RATIO * 5, 
+			(i32(block_position.y) + 5) * core.CELL_SIZE,
+		 	core.CELL_SIZE,
+				core.CELL_SIZE,
 			PREVIEW_COLOR
 		)
 	}
 }
 
-draw_b2b_indicator :: proc(game_state: game.GameState) {
+draw_b2b_indicator :: proc(game_state: core.GameState) {
 	time := rl.GetTime()
 
 	b2b_text := fmt.ctprintf("B2B!! %ix", game_state.num_b2bs)
@@ -175,8 +174,8 @@ draw_b2b_indicator :: proc(game_state: game.GameState) {
 		rl.GetFontDefault(),
 		b2b_text, 
 		{
-			game.CELL_SIZE * game.CELL_WINDOW_RATIO * .80, 
-			(game.CELL_SIZE * game.CELL_WINDOW_RATIO * .4) + f32(math.sin(time * 10)) * f32(math.min(2 + game_state.num_b2bs, 12)) * .5
+			core.CELL_SIZE * core.CELL_WINDOW_RATIO * .80, 
+			(core.CELL_SIZE * core.CELL_WINDOW_RATIO * .4) + f32(math.sin(time * 10)) * f32(math.min(2 + game_state.num_b2bs, 12)) * .5
 		},
 		text_size / 2,
 		f32(math.sin(time * f64(math.min(1 + game_state.num_b2bs, 8)))) * f32(math.min(20 + game_state.num_b2bs, 28)),
@@ -187,7 +186,7 @@ draw_b2b_indicator :: proc(game_state: game.GameState) {
 }
 
 draw_pause_screen :: proc() {
-	rl.DrawRectangleRec(rl.Rectangle{x = 0, y = 0, width = game.GAME_SIZE, height = game.GAME_SIZE}, rl.BLACK)
+	rl.DrawRectangleRec(rl.Rectangle{x = 0, y = 0, width = core.GAME_SIZE, height = core.GAME_SIZE}, rl.BLACK)
 
 	pause_text := cstring("PAUSED")
 	font := rl.GetFontDefault()
@@ -203,10 +202,10 @@ draw_pause_screen :: proc() {
 		font,
 		pause_text, 
 		{
-			game.GAME_SIZE / 2 - text_size.x / 2, 
-			game.GAME_SIZE / 2 - text_size.y / 2
+			core.GAME_SIZE / 2 - text_size.x / 2, 
+			core.GAME_SIZE / 2 - text_size.y / 2
 		},
-		rl.Vector2{0, game.CELL_WINDOW_RATIO * 1.2},
+		rl.Vector2{0, core.CELL_WINDOW_RATIO * 1.2},
 		0,
 		font_size, 
 		font_spacing,
@@ -217,7 +216,7 @@ draw_pause_screen :: proc() {
 draw_game_over_screen :: proc() {
 	gm_color := rl.BLACK
 	gm_color.a -= gm_color.a / 4
-	rl.DrawRectangleRec(rl.Rectangle{x = 0, y = 0, width = game.GAME_SIZE, height = game.GAME_SIZE}, gm_color)
+	rl.DrawRectangleRec(rl.Rectangle{x = 0, y = 0, width = core.GAME_SIZE, height = core.GAME_SIZE}, gm_color)
 
 	font_spacing: f32 = 2.0
 	font := rl.GetFontDefault()
@@ -234,10 +233,10 @@ draw_game_over_screen :: proc() {
 		font,
 		gm_text, 
 		{
-			game.GAME_SIZE / 2 - gm_size.x / 2, 
-			game.GAME_SIZE / 2 - gm_size.y / 2
+			core.GAME_SIZE / 2 - gm_size.x / 2, 
+			core.GAME_SIZE / 2 - gm_size.y / 2
 		},
-		rl.Vector2{0, game.CELL_WINDOW_RATIO},
+		rl.Vector2{0, core.CELL_WINDOW_RATIO},
 		0,
 		gm_font_size, 
 		font_spacing + 4,
@@ -256,8 +255,8 @@ draw_game_over_screen :: proc() {
 		font,
 		gm2_text, 
 		{
-			game.GAME_SIZE / 2 - gm2_size.x / 2, 
-			game.GAME_SIZE / 2 - gm2_size.y / 2
+			core.GAME_SIZE / 2 - gm2_size.x / 2, 
+			core.GAME_SIZE / 2 - gm2_size.y / 2
 		},
 		rl.Vector2{0, 0},
 		0,
@@ -270,4 +269,4 @@ draw_game_over_screen :: proc() {
 import "core:fmt"
 import "core:math"
 import rl "vendor:raylib"
-import "../game"
+import "../core"

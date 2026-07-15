@@ -1,4 +1,4 @@
-package game
+package core
 
 GAME_SIZE :: 600
 

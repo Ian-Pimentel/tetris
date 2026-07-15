@@ -1,4 +1,4 @@
-package game
+package core
 
 Vec2i :: [2]int
 Tetrimino :: [4]Vec2i
